@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+</head>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .main {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        gap: 40px;
+        min-height: calc(100vh - 40px);
+    }
+
+    .left-area {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        min-width: 400px;
+    }
+
+    .left-area h1 {
+        color: #333;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+        text-align: center;
+        font-weight: 300;
+    }
+
+    .details {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .details label {
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+    }
+
+    .details input {
+        padding: 15px;
+        border: 2px solid #e1e5e9;
+        border-radius: 10px;
+        font-size: 1.1em;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+    .details input:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+    }
+
+    .details button {
+        padding: 15px 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.2em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+    }
+
+    .details button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .details button:active {
+        transform: translateY(-1px);
+    }
+
+    .right-area {
+        display: block;
+        text-align: center;
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        min-width: 400px;
+    }
+
+    .right-area img {
+        width: 70%;
+        max-width: 300px;
+        height: auto;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .answer {
+        font-size: 1.5em;
+        color: #333;
+        font-weight: 600;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 15px;
+        border-left: 5px solid #667eea;
+    }
+
+    .final {
+        color: #667eea;
+        font-weight: 700;
+        font-size: 1.2em;
+    }
+
+    .wozza {
+        /* Keeping your existing empty div */
+    }
+
+    @media (max-width: 768px) {
+        .main {
+            flex-direction: column;
+            gap: 30px;
+            padding: 10px;
+        }
+
+        .left-area,
+        .right-area {
+            min-width: unset;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px 20px;
+        }
+
+        .left-area h1 {
+            font-size: 2em;
+        }
+
+        .details {
+            gap: 15px;
+        }
+
+        .details input,
+        .details button {
+            font-size: 1em;
+        }
+    }
+</style>
+
+<body>
+    <div class="main">
+        <div class="left-area">
+            <h1>BMI Calculator</h1>
+            <div class="details">
+                <label for="name">Name</label>
+                <input type="text" class="name" placeholder="Enter your name"/>
+                
+                <label for="height">Height</label>
+                <input placeholder="Inches" type="text" class="height"/>
+                
+                <label for="weight">Weight</label>
+                <input type="text" class="weight" placeholder="Pounds">
+                
+                <button type="button" onclick="bmiCalculator()">Calculate BMI</button>
+            </div>
+        </div>
+       
+        <div class="right-area">
+            <img width="70%" src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop&auto=format" alt="BMI Chart">
+            <div class="answer">Your BMI: <span class="final">--</span></div>
+        </div>
+    </div>
+</body>
+
+<div class="wozza"></div>
+
+<script>
+function bmiCalculator() {
+    const name = document.querySelector('.name').value;
+    const height = parseFloat(document.querySelector('.height').value);
+    const weight = parseFloat(document.querySelector('.weight').value);
+    const finalResult = document.querySelector('.final');
+    
+    if (!name || !height || !weight) {
+        alert('Please fill in all fields');
+        return;
+    }
+    
+    if (height <= 0 || weight <= 0) {
+        alert('Please enter valid positive numbers');
+        return;
+    }
+    
+    // BMI formula: weight (lbs) / [height (in)]² × 703
+    const bmi = (weight / (height * height)) * 703;
+    
+    let category = '';
+    if (bmi < 18.5) {
+        category = ' (Underweight)';
+    } else if (bmi < 25) {
+        category = ' (Normal)';
+    } else if (bmi < 30) {
+        category = ' (Overweight)';
+    } else {
+        category = ' (Obese)';
+    }
+    
+    finalResult.textContent = bmi.toFixed(1) + category;
+}
+</script>
+
+</html>
